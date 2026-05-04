@@ -6,13 +6,15 @@ import BrowseArea from '../components/chat/BrowseArea';
 import HistoryPanel from '../components/chat/HistoryPanel';
 import ImageGenerationArea from '../components/chat/ImageGenerationArea';
 import VoiceGenerationArea from '../components/chat/VoiceGenerationArea';
+import VideoGenerationArea from '../components/chat/VideoGenerationArea';
 
 export type ViewType =
   | 'chat'
   | 'new_chat'
   | 'browse'
   | 'image_generation'
-  | 'voice_generation';
+  | 'voice_generation'
+  | 'video_generation';
 
 export default function ChatWorkspace() {
   const [isDarkMode, setIsDarkMode] = useState(() =>
@@ -44,6 +46,7 @@ export default function ChatWorkspace() {
       {activeView === 'chat' && <ChatArea />}
       {activeView === 'image_generation' && <ImageGenerationArea />}
       {activeView === 'voice_generation' && <VoiceGenerationArea />}
+      {activeView === 'video_generation' && <VideoGenerationArea />}
       <HistoryPanel />
     </div>
   );

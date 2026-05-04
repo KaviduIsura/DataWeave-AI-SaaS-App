@@ -42,7 +42,8 @@ interface SidebarProps {
     | 'new_chat'
     | 'browse'
     | 'image_generation'
-    | 'voice_generation';
+    | 'voice_generation'
+    | 'video_generation';
   onNavigate?: (
     view:
       | 'chat'
@@ -50,6 +51,7 @@ interface SidebarProps {
       | 'browse'
       | 'image_generation'
       | 'voice_generation'
+      | 'video_generation'
   ) => void;
 }
 
@@ -82,7 +84,11 @@ export default function Sidebar({
       action: () => setIsSearchOpen(true),
       isActive: isSearchOpen,
     },
-    { icon: SquarePlay, action: () => {} },
+    {
+      icon: SquarePlay,
+      action: () => onNavigate?.('video_generation'),
+      isActive: activeView === 'video_generation',
+    },
     { icon: LayoutGrid, action: () => {} },
   ];
 
