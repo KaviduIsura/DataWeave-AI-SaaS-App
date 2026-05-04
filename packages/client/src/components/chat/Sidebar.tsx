@@ -16,6 +16,7 @@ import {
   Moon,
   X,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const chatHistory = {
   today: [{ id: 1, title: 'Make 10 others sentences...' }],
@@ -62,6 +63,7 @@ export default function Sidebar({
   onNavigate,
 }: SidebarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const navigate = useNavigate();
 
   const navItems = [
     {
@@ -145,18 +147,28 @@ export default function Sidebar({
               </div>
 
               {/* Other Bottom Icons */}
-              {[HelpCircle, Settings, User].map((Icon, idx) => (
-                <div
-                  key={idx}
-                  className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md"
-                >
-                  <div className="w-8 h-8 bg-gradient-to-tr from-slate-50 to-slate-200 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
-                    <button className="p-2 text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
-                      <Icon className="w-4 h-4" />
-                    </button>
+              {[
+                { icon: HelpCircle, action: () => navigate('/help') },
+                { icon: Settings, action: () => {} },
+                { icon: User, action: () => {} },
+              ].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={idx}
+                    className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md"
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-tr from-slate-50 to-slate-200 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
+                      <button
+                        onClick={item.action}
+                        className="p-2 text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors"
+                      >
+                        <Icon className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
