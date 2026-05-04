@@ -99,7 +99,7 @@ export default function Sidebar({
       <div className="p-3 h-screen">
         <div className="flex h-full shrink-0 text-slate-700 dark:text-slate-300 rounded-xl border border-slate-200 dark:border-white/10 p-2">
           {/* Rail Navigation */}
-          <div className="w-[60px] flex flex-col items-center py-2 border border-slate-200 dark:border-white/5 bg-white dark:bg-[#0A0D14] rounded-l-lg">
+          <div className="w-[60px] flex flex-col items-center py-2 border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#0A0D14] rounded-l-lg shadow-[inset_-1px_0_10px_rgba(0,0,0,0.02)]">
             <div className="flex-1 flex flex-col items-center gap-6">
               <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.5)]">
                 <Sparkles className="w-5 h-5 text-white" />
@@ -114,7 +114,7 @@ export default function Sidebar({
                     key={idx}
                     className={`relative p-[1px] rounded-md shadow-md ${item.isActive ? 'bg-blue-500' : 'bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50'}`}
                   >
-                    <div className="w-8 h-8 bg-gradient-to-tr from-slate-50 to-slate-200 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
+                    <div className="w-8 h-8 bg-gradient-to-tr from-white to-slate-50 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
                       <button
                         onClick={item.action}
                         className={`p-2 rounded-lg transition-colors ${item.isActive ? 'text-blue-500 dark:text-blue-400 bg-slate-200 dark:bg-white/10' : 'text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/5'}`}
@@ -132,7 +132,7 @@ export default function Sidebar({
             <div className="flex flex-col items-center gap-4 mt-auto">
               {/* Theme Toggle Button */}
               <div className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                <div className="w-8 h-8 bg-gradient-to-tr from-slate-50 to-slate-200 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
+                <div className="w-8 h-8 bg-gradient-to-tr from-white to-slate-50 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
                   <button
                     onClick={toggleTheme}
                     className="p-2 text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors"
@@ -158,7 +158,7 @@ export default function Sidebar({
                     key={idx}
                     className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-tr from-slate-50 to-slate-200 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
+                    <div className="w-8 h-8 bg-gradient-to-tr from-white to-slate-50 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
                       <button
                         onClick={item.action}
                         className="p-2 text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors"
@@ -173,7 +173,7 @@ export default function Sidebar({
           </div>
 
           {/* Main Sidebar Panel */}
-          <div className="w-[280px] flex flex-col h-full bg-slate-50 dark:bg-[#0E121A] border border-slate-200 dark:border-white/5 rounded-r-lg">
+          <div className="w-[280px] flex flex-col h-full bg-white/80 backdrop-blur-md dark:bg-[#0E121A] border border-slate-200 dark:border-white/5 rounded-r-lg">
             <div className="p-4 flex items-center justify-between">
               <span className="font-semibold text-slate-900 dark:text-white text-lg tracking-tight">
                 DataWave
@@ -189,7 +189,7 @@ export default function Sidebar({
             <div className="px-4 pb-4 flex flex-col gap-2">
               <button
                 onClick={() => onNavigate?.('new_chat')}
-                className={`w-full hover:bg-slate-300 dark:hover:bg-[#1E232E] text-slate-800 dark:text-white flex items-center justify-center gap-2 py-2.5 rounded-lg border transition-colors ${activeView === 'new_chat' ? 'bg-slate-300 dark:bg-[#1E232E] border-slate-400 dark:border-white/20' : 'bg-slate-200 dark:bg-[#1a2130] border-slate-300 dark:border-white/10'}`}
+                className={`w-full hover:bg-slate-100 dark:hover:bg-[#1E232E] text-slate-800 dark:text-white flex items-center justify-center gap-2 py-2.5 rounded-lg border transition-colors ${activeView === 'new_chat' ? 'bg-slate-100 dark:bg-[#1E232E] border-slate-300 dark:border-white/20' : 'bg-slate-50 dark:bg-[#1a2130] border-slate-200 dark:border-white/10 shadow-sm'}`}
               >
                 <Plus className="w-4 h-4" />
                 <span className="font-medium text-sm">Add new chat</span>

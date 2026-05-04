@@ -154,7 +154,7 @@ export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
                     <RefreshCcw className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-500 bg-slate-200 dark:bg-black/20 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-white/5">
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-500 bg-white shadow-sm dark:bg-black/20 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/5">
                   Nokat 2.0 <ChevronDown className="w-3 h-3" />
                 </div>
               </div>
@@ -175,7 +175,7 @@ export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
           <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
             {/* MoreHorizontal Button with gradient border */}
             <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-              <div className="bg-slate-50 dark:bg-[#131722] rounded-lg">
+              <div className="bg-white dark:bg-[#131722] rounded-lg">
                 <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-[#1C2130]/80 transition-colors">
                   <MoreHorizontal className="w-4 h-4" />
                 </button>
@@ -185,7 +185,7 @@ export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
             <div className="flex items-center gap-2">
               {/* Paperclip Button with gradient border */}
               <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                <div className="bg-slate-50 dark:bg-[#131722] rounded-lg">
+                <div className="bg-white dark:bg-[#131722] rounded-lg">
                   <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
                     <Paperclip className="w-4 h-4" />
                   </button>
@@ -194,7 +194,7 @@ export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
 
               {/* Mic Button with gradient border */}
               <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                <div className="bg-slate-50 dark:bg-[#131722] rounded-lg">
+                <div className="bg-white dark:bg-[#131722] rounded-lg">
                   <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
                     <Mic className="w-4 h-4" />
                   </button>
@@ -203,7 +203,7 @@ export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
 
               {/* Link2 Button with gradient border */}
               <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                <div className="bg-slate-50 dark:bg-[#131722] rounded-lg">
+                <div className="bg-white dark:bg-[#131722] rounded-lg">
                   <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
                     <Link2 className="w-4 h-4" />
                   </button>

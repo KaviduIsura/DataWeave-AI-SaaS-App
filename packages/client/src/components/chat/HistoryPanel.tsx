@@ -7,7 +7,30 @@ import {
   Share,
   Link2,
   Mail,
+  Zap,
+  Brain,
 } from 'lucide-react';
+
+const aiModels = [
+  {
+    id: 'wavegpt-plus',
+    name: 'WaveGPT+',
+    icon: Sparkles,
+    desc: 'Advanced, high-quality responses',
+  },
+  {
+    id: 'wavegpt-fast',
+    name: 'WaveGPT Fast',
+    icon: Zap,
+    desc: 'Quick, everyday tasks',
+  },
+  {
+    id: 'datawave-pro',
+    name: 'DataWave Pro',
+    icon: Brain,
+    desc: 'Deep data analysis & coding',
+  },
+];
 
 const historyTimeline = [
   {
@@ -75,6 +98,8 @@ export default function HistoryPanel({
   onToggleLayout,
 }: HistoryPanelProps) {
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
+  const [selectedModel, setSelectedModel] = useState(aiModels[0]);
 
   return (
     <>
@@ -84,16 +109,59 @@ export default function HistoryPanel({
         {/* Top Right Actions */}
         <div className="flex items-center justify-end gap-2">
           {/* WaveGPT+ Button with gradient border */}
-          <div className="relative p-[1px] rounded-xl bg-gradient-to-t from-slate-200 via-slate-300 to-slate-400 dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-            <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-tr from-slate-50 to-slate-200 dark:from-[#0f141c] dark:to-slate-800 hover:bg-slate-300 dark:hover:bg-[#1C2130] transition-colors text-slate-900 dark:text-white text-sm font-medium">
-              WaveGPT+
-              <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+          <div className="relative z-20 p-[1px] rounded-xl bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
+            <button
+              onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-tr from-white to-slate-50 dark:from-[#0f141c] dark:to-slate-800 hover:bg-slate-300 dark:hover:bg-[#1C2130] transition-colors text-slate-900 dark:text-white text-sm font-medium"
+            >
+              {selectedModel.name}
+              <ChevronDown
+                className={`w-4 h-4 text-slate-500 dark:text-slate-400 transition-transform ${isModelDropdownOpen ? 'rotate-180' : ''}`}
+              />
             </button>
+
+            {/* Dropdown Menu */}
+            {isModelDropdownOpen && (
+              <div className="absolute top-full right-0 mt-2 w-64 bg-white/95 dark:bg-[#0f141c]/95 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-xl p-2 shadow-xl">
+                <div className="flex flex-col gap-1">
+                  {aiModels.map((model) => {
+                    const Icon = model.icon;
+                    const isSelected = selectedModel.id === model.id;
+                    return (
+                      <button
+                        key={model.id}
+                        onClick={() => {
+                          setSelectedModel(model);
+                          setIsModelDropdownOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-3 p-2 rounded-lg transition-colors text-left ${isSelected ? 'bg-slate-100 dark:bg-white/10' : 'hover:bg-slate-50 dark:hover:bg-white/5'}`}
+                      >
+                        <div
+                          className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-white'}`}
+                        >
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div className="flex flex-col overflow-hidden">
+                          <span
+                            className={`text-sm font-medium truncate ${isSelected ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}
+                          >
+                            {model.name}
+                          </span>
+                          <span className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                            {model.desc}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Share Button with gradient border */}
-          <div className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-300 to-slate-400 dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-            <div className="w-8 h-8 bg-gradient-to-tr from-slate-50 to-slate-200 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
+          <div className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
+            <div className="w-8 h-8 bg-gradient-to-tr from-white to-slate-50 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
               <button
                 onClick={() => setIsShareOpen(true)}
                 className="p-2 text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors"
@@ -104,8 +172,8 @@ export default function HistoryPanel({
           </div>
 
           {/* Layout Button with gradient border */}
-          <div className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-300 to-slate-400 dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-            <div className="w-8 h-8 bg-gradient-to-tr from-slate-50 to-slate-200 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
+          <div className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
+            <div className="w-8 h-8 bg-gradient-to-tr from-white to-slate-50 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
               <button
                 onClick={onToggleLayout}
                 className="p-2 text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors"
@@ -118,8 +186,8 @@ export default function HistoryPanel({
 
         {/* History Panel */}
         {!isCollapsed && (
-          <div className="p-1 rounded-lg border border-slate-200 dark:border-white/10 flex-1 flex flex-col min-h-0 bg-white/50 dark:bg-transparent">
-            <div className="flex-1 w-full bg-slate-50 dark:bg-[#0E121A] flex flex-col rounded-md border border-slate-200 dark:border-white/10 overflow-hidden min-h-0 transition-colors">
+          <div className="p-1 rounded-lg border border-slate-200 dark:border-white/10 flex-1 flex flex-col min-h-0 bg-white/80 backdrop-blur-md dark:bg-transparent shadow-sm">
+            <div className="flex-1 w-full bg-white dark:bg-[#0E121A] flex flex-col rounded-md border border-slate-200 dark:border-white/10 overflow-hidden min-h-0 transition-colors">
               <div className="p-4 flex items-center justify-between border-b border-slate-200 dark:border-white/5 ">
                 <h2 className="text-slate-900 dark:text-white font-medium">
                   History
@@ -137,7 +205,7 @@ export default function HistoryPanel({
                   {historyTimeline.map((item, index) => (
                     <div key={item.id} className="relative pl-6">
                       {/* Timeline Dot */}
-                      <div className="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-slate-50 dark:bg-[#0E121A] flex items-center justify-center transition-colors">
+                      <div className="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-white dark:bg-[#0E121A] flex items-center justify-center transition-colors">
                         {item.type === 'ai' ? (
                           <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center">
                             <Sparkles className="w-3 h-3 text-white" />

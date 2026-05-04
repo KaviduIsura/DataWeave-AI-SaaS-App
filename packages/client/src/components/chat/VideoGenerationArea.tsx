@@ -41,7 +41,7 @@ export default function VideoGenerationArea() {
             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
               {/* MoreHorizontal Button with gradient border */}
               <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                <div className="bg-slate-50 dark:bg-[#131722] rounded-lg">
+                <div className="bg-white dark:bg-[#131722] rounded-lg">
                   <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-[#1C2130]/80 transition-colors">
                     <MoreHorizontal className="w-4 h-4" />
                   </button>
@@ -51,7 +51,7 @@ export default function VideoGenerationArea() {
               <div className="flex items-center gap-2">
                 {/* Paperclip Button with gradient border */}
                 <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                  <div className="bg-slate-50 dark:bg-[#131722] rounded-lg">
+                  <div className="bg-white dark:bg-[#131722] rounded-lg">
                     <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
                       <Paperclip className="w-4 h-4" />
                     </button>
@@ -60,7 +60,7 @@ export default function VideoGenerationArea() {
 
                 {/* Mic Button with gradient border */}
                 <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                  <div className="bg-slate-50 dark:bg-[#131722] rounded-lg">
+                  <div className="bg-white dark:bg-[#131722] rounded-lg">
                     <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
                       <Mic className="w-4 h-4" />
                     </button>
@@ -69,7 +69,7 @@ export default function VideoGenerationArea() {
 
                 {/* Link2 Button with gradient border */}
                 <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                  <div className="bg-slate-50 dark:bg-[#131722] rounded-lg">
+                  <div className="bg-white dark:bg-[#131722] rounded-lg">
                     <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
                       <Link2 className="w-4 h-4" />
                     </button>
@@ -85,7 +85,7 @@ export default function VideoGenerationArea() {
           {sampleTexts.map((text, idx) => (
             <button
               key={idx}
-              className="px-4 py-2.5 rounded-full border border-slate-200 dark:border-white/10 bg-white/50 dark:bg-white/5 text-slate-600 dark:text-slate-300 text-xs font-medium hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white transition-all duration-300 shadow-sm dark:shadow-none"
+              className="px-4 py-2.5 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 text-slate-600 dark:text-slate-300 text-xs font-medium hover:bg-slate-50 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white transition-all duration-300 shadow-sm dark:shadow-none"
             >
               {text}
             </button>
