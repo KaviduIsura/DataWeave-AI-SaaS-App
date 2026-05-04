@@ -33,138 +33,181 @@ const chatHistory = {
 
 export default function Sidebar() {
   return (
-    <div className="flex h-screen shrink-0 bg-[#0A0D14] text-slate-300">
-      {/* Rail Navigation */}
-      <div className="w-[60px] flex flex-col items-center py-6 border-r border-white/5 bg-[#0A0D14]">
-        <div className="flex-1 flex flex-col items-center gap-6">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center mb-4 shadow-[0_0_15px_rgba(37,99,235,0.5)]">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
-
-          <button className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-            <Home className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-            <Compass className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-            <History className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-            <Volume2 className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-            <SquarePlay className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-            <LayoutGrid className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="flex flex-col items-center gap-4 mt-auto">
-          <button className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-            <HelpCircle className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-            <Settings className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-            <User className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
-
-      {/* Main Sidebar Panel */}
-      <div className="w-[280px] flex flex-col h-full bg-[#0E121A] border-r border-white/5">
-        <div className="p-5 flex items-center justify-between">
-          <span className="font-semibold text-white text-lg tracking-tight">
-            Nokat AI
-          </span>
-          <span className="text-xs text-slate-500 font-mono">v1.20</span>
-        </div>
-
-        <div className="px-4 pb-4">
-          <button className="w-full bg-[#181C25] hover:bg-[#1E232E] text-white flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/10 transition-colors">
-            <Plus className="w-4 h-4" />
-            <span className="font-medium text-sm">Add new chat</span>
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto px-3 pb-4">
-          {/* Today */}
-          <div className="mb-6">
-            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
-              Today
-            </h3>
-            <div className="space-y-0.5">
-              {chatHistory.today.map((chat) => (
-                <button
-                  key={chat.id}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-left bg-white/5"
-                >
-                  <MessageSquare className="w-4 h-4 shrink-0 text-slate-400" />
-                  <span className="truncate flex-1">{chat.title}</span>
-                </button>
-              ))}
+    <div className="p-3 h-screen">
+      <div className="flex h-full shrink-0 text-slate-300  rounded-xl border border-white/10 p-2">
+        {/* Rail Navigation */}
+        <div className="w-[60px] flex flex-col items-center py-2 border border-white/5 bg-[#0A0D14] rounded-l-lg">
+          <div className="flex-1 flex flex-col items-center gap-6">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.5)]">
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
-          </div>
-
-          {/* Yesterday */}
-          <div className="mb-6">
-            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
-              Yesterday
-            </h3>
-            <div className="space-y-0.5">
-              {chatHistory.yesterday.map((chat) => (
-                <button
-                  key={chat.id}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors text-left"
-                >
-                  <MessageSquare className="w-4 h-4 shrink-0" />
-                  <span className="truncate flex-1">{chat.title}</span>
+            <div className="w-full h-px bg-white/10 " />
+            <div className="relative p-[1px] rounded-md bg-gradient-to-t from-white/5 via-white/30 to-white/50 shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-tr from-[#0f141c] to-slate-800 flex items-center justify-center rounded-md">
+                <button className="p-2 text-white hover:text-slate-300 rounded-lg hover:bg-white/5 transition-colors">
+                  <Home className="w-4 h-4" />
                 </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Previous */}
-          <div>
-            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
-              Previous
-            </h3>
-            <div className="space-y-0.5">
-              {chatHistory.previous.map((chat) => (
-                <button
-                  key={chat.id}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors text-left"
-                >
-                  <MessageSquare className="w-4 h-4 shrink-0" />
-                  <span className="truncate flex-1">{chat.title}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Upgrade Card */}
-        <div className="p-4 mt-auto">
-          <div className="bg-gradient-to-b from-[#161B26] to-[#0A0D14] border border-white/10 rounded-2xl p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
               </div>
-              <span className="font-semibold text-white text-sm">
-                Upgrade Your Plan
-              </span>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed mb-4">
-              Unlock premium features, faster responses, and enhanced
-              capabilities of AI
-            </p>
-            <button className="w-full py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg text-sm font-medium transition-all shadow-[0_0_15px_rgba(37,99,235,0.3)]">
-              Upgrade Premium
+            <div className="relative p-[1px] rounded-md bg-gradient-to-t from-white/5 via-white/30 to-white/50 shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-tr from-[#0f141c] to-slate-800 flex items-center justify-center rounded-md">
+                <button className="p-2 text-white hover:text-slate-300 rounded-lg hover:bg-white/5 transition-colors">
+                  <Compass className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            <div className="relative p-[1px] rounded-md bg-gradient-to-t from-white/5 via-white/30 to-white/50 shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-tr from-[#0f141c] to-slate-800 flex items-center justify-center rounded-md">
+                <button className="p-2 text-white hover:text-slate-300 rounded-lg hover:bg-white/5 transition-colors">
+                  <History className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            <div className="relative p-[1px] rounded-md bg-gradient-to-t from-white/5 via-white/30 to-white/50 shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-tr from-[#0f141c] to-slate-800 flex items-center justify-center rounded-md">
+                <button className="p-2 text-white hover:text-slate-300 rounded-lg hover:bg-white/5 transition-colors">
+                  <Volume2 className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            <div className="relative p-[1px] rounded-md bg-gradient-to-t from-white/5 via-white/30 to-white/50 shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-tr from-[#0f141c] to-slate-800 flex items-center justify-center rounded-md">
+                <button className="p-2 text-white hover:text-slate-300 rounded-lg hover:bg-white/5 transition-colors">
+                  <SquarePlay className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            <div className="relative p-[1px] rounded-md bg-gradient-to-t from-white/5 via-white/30 to-white/50 shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-tr from-[#0f141c] to-slate-800 flex items-center justify-center rounded-md">
+                <button className="p-2 text-white hover:text-slate-300 rounded-lg hover:bg-white/5 transition-colors">
+                  <LayoutGrid className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <hr className="border-t border-white/10 mx-5 mb-3" />
+
+          <div className="flex flex-col items-center gap-4 mt-auto">
+            <div className="relative p-[1px] rounded-md bg-gradient-to-t from-white/5 via-white/30 to-white/50 shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-tr from-[#0f141c] to-slate-800 flex items-center justify-center rounded-md">
+                <button className="p-2 text-white hover:text-slate-300 rounded-lg hover:bg-white/5 transition-colors">
+                  <HelpCircle className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            <div className="relative p-[1px] rounded-md bg-gradient-to-t from-white/5 via-white/30 to-white/50 shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-tr from-[#0f141c] to-slate-800 flex items-center justify-center rounded-md">
+                <button className="p-2 text-white hover:text-slate-300 rounded-lg hover:bg-white/5 transition-colors">
+                  <Settings className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            <div className="relative p-[1px] rounded-md bg-gradient-to-t from-white/5 via-white/30 to-white/50 shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-tr from-[#0f141c] to-slate-800 flex items-center justify-center rounded-md">
+                <button className="p-2 text-white hover:text-slate-300 rounded-lg hover:bg-white/5 transition-colors">
+                  <User className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Sidebar Panel */}
+        <div className="w-[280px] flex flex-col h-full bg-[#0E121A] border border-white/5 rounded-r-lg">
+          <div className="p-4 flex items-center justify-between">
+            <span className="font-semibold text-white text-lg tracking-tight">
+              DataWave
+            </span>
+            <div className="border border-white/5 h-8 w-12 rounded-full flex items-center justify-center">
+              <span className="text-xs text-white font-mono">v1.20</span>
+            </div>
+          </div>
+          <hr className="border-t border-white/10 mx-5 mb-3" />
+
+          <div className="px-4 pb-4">
+            <button className="w-full bg-[#1a2130] hover:bg-[#1E232E] text-white flex items-center justify-center gap-2 py-2.5 rounded-lg border border-white/10 transition-colors">
+              <Plus className="w-4 h-4" />
+              <span className="font-medium text-sm">Add new chat</span>
             </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-3 pb-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
+            {/* Today */}
+            <div className="mb-6">
+              <h3 className="text-xs font-semibold text-slate-500  uppercase tracking-wider mb-2 px-3">
+                Today
+              </h3>
+              <div className="space-y-0.5">
+                {chatHistory.today.map((chat) => (
+                  <button
+                    key={chat.id}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-left bg-white/5"
+                  >
+                    <MessageSquare className="w-4 h-4 shrink-0 text-slate-400 " />
+                    <span className="truncate flex-1">{chat.title}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Yesterday */}
+            <div className="mb-6">
+              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
+                Yesterday
+              </h3>
+              <div className="space-y-0.5">
+                {chatHistory.yesterday.map((chat) => (
+                  <button
+                    key={chat.id}
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors text-left"
+                  >
+                    <MessageSquare className="w-4 h-4 shrink-0" />
+                    <span className="truncate flex-1">{chat.title}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Previous */}
+            <div>
+              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
+                Previous
+              </h3>
+              <div className="space-y-0.5">
+                {chatHistory.previous.map((chat) => (
+                  <button
+                    key={chat.id}
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors text-left"
+                  >
+                    <MessageSquare className="w-4 h-4 shrink-0" />
+                    <span className="truncate flex-1">{chat.title}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Upgrade Card */}
+          <div className="p-4 mt-auto">
+            <div className="bg-gradient-to-b from-[#161B26] to-[#0A0D14] border border-white/10 rounded-2xl p-4 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+                <span className="font-semibold text-white text-sm">
+                  Upgrade Your Plan
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                Unlock premium features, faster responses, and enhanced
+                capabilities of AI
+              </p>
+              <button className="w-full py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg text-sm font-medium transition-all shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+                Upgrade Premium
+              </button>
+            </div>
           </div>
         </div>
       </div>

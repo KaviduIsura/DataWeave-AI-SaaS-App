@@ -71,7 +71,7 @@ export default function ChatArea() {
           </div>
           <div className="flex flex-col items-start gap-2 max-w-[80%]">
             <span className="text-sm font-medium text-slate-300 ml-2">
-              Nokat AI
+              DataWave
             </span>
             <div className="bg-[#131722] border border-white/5 rounded-2xl rounded-tl-sm px-6 py-5 text-white text-sm leading-relaxed w-full">
               <h4 className="font-semibold text-white mb-2 text-base">
@@ -129,7 +129,7 @@ export default function ChatArea() {
           </div>
           <div className="flex flex-col items-start gap-2 max-w-[80%]">
             <span className="text-sm font-medium text-slate-300 ml-2">
-              Nokat AI
+              DataWave
             </span>
             <div className="bg-[#131722] border border-white/5 rounded-2xl rounded-tl-sm px-6 py-5 text-white text-sm leading-relaxed w-full">
               <p className="text-slate-300">

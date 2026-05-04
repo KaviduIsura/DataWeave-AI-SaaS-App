@@ -91,7 +91,7 @@ export default function HistoryPanel() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-sm font-medium text-slate-300">
-                    {item.type === 'ai' ? 'Nokat AI' : 'You'}
+                    {item.type === 'ai' ? 'DataWave' : 'You'}
                   </span>
                   <span className="text-xs text-slate-500">• {item.time}</span>
                 </div>
