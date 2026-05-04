@@ -1,8 +1,8 @@
 import {
-  Home,
+  LucideImages,
   Compass,
-  History,
-  Volume2,
+  LucideVoicemail,
+  AudioLines,
   SquarePlay,
   LayoutGrid,
   HelpCircle,
@@ -35,11 +35,13 @@ const chatHistory = {
 interface SidebarProps {
   isDarkMode?: boolean;
   toggleTheme?: () => void;
+  onNewChat?: () => void;
 }
 
 export default function Sidebar({
   isDarkMode = true,
   toggleTheme,
+  onNewChat,
 }: SidebarProps) {
   return (
     <div className="p-3 h-screen">
@@ -53,7 +55,7 @@ export default function Sidebar({
             <div className="w-full h-px bg-slate-200 dark:bg-white/10" />
 
             {/* Nav Icons */}
-            {[Home, Compass, History, Volume2, SquarePlay, LayoutGrid].map(
+            {[Compass, LucideImages, AudioLines, SquarePlay, LayoutGrid].map(
               (Icon, idx) => (
                 <div
                   key={idx}
@@ -89,7 +91,7 @@ export default function Sidebar({
             </div>
 
             {/* Other Bottom Icons */}
-            {[Settings, User].map((Icon, idx) => (
+            {[HelpCircle, Settings, User].map((Icon, idx) => (
               <div
                 key={idx}
                 className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md"
@@ -119,7 +121,10 @@ export default function Sidebar({
           <hr className="border-t border-slate-200 dark:border-white/10 mx-5 mb-3" />
 
           <div className="px-4 pb-4">
-            <button className="w-full bg-slate-200 dark:bg-[#1a2130] hover:bg-slate-300 dark:hover:bg-[#1E232E] text-slate-800 dark:text-white flex items-center justify-center gap-2 py-2.5 rounded-lg border border-slate-300 dark:border-white/10 transition-colors">
+            <button
+              onClick={onNewChat}
+              className="w-full bg-slate-200 dark:bg-[#1a2130] hover:bg-slate-300 dark:hover:bg-[#1E232E] text-slate-800 dark:text-white flex items-center justify-center gap-2 py-2.5 rounded-lg border border-slate-300 dark:border-white/10 transition-colors"
+            >
               <Plus className="w-4 h-4" />
               <span className="font-medium text-sm">Add new chat</span>
             </button>
