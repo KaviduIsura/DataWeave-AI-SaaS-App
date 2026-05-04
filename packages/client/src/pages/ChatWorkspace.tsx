@@ -22,6 +22,11 @@ export default function ChatWorkspace() {
   );
 
   const [activeView, setActiveView] = useState<ViewType>('chat');
+  const [layoutState, setLayoutState] = useState(0);
+
+  const handleToggleLayout = () => {
+    setLayoutState((prev) => (prev + 1) % 3);
+  };
 
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
 
@@ -35,19 +40,26 @@ export default function ChatWorkspace() {
 
   return (
     <div className="flex h-screen w-full overflow-hidden font-sans selection:bg-blue-500/30 transition-colors duration-300 bg-slate-50 dark:bg-[#0A0D14]">
-      <Sidebar
-        isDarkMode={isDarkMode}
-        toggleTheme={toggleTheme}
-        activeView={activeView}
-        onNavigate={setActiveView}
-      />
+      {layoutState !== 2 && (
+        <Sidebar
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+          activeView={activeView}
+          onNavigate={setActiveView}
+        />
+      )}
       {activeView === 'browse' && <BrowseArea />}
-      {activeView === 'new_chat' && <NewChatArea />}
-      {activeView === 'chat' && <ChatArea />}
+      {activeView === 'new_chat' && (
+        <NewChatArea isFullWidth={layoutState === 2} />
+      )}
+      {activeView === 'chat' && <ChatArea isFullWidth={layoutState === 2} />}
       {activeView === 'image_generation' && <ImageGenerationArea />}
       {activeView === 'voice_generation' && <VoiceGenerationArea />}
       {activeView === 'video_generation' && <VideoGenerationArea />}
-      <HistoryPanel />
+      <HistoryPanel
+        isCollapsed={layoutState !== 0}
+        onToggleLayout={handleToggleLayout}
+      />
     </div>
   );
 }

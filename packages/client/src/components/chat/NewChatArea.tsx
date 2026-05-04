@@ -7,14 +7,20 @@ const sampleTexts = [
   'Brainstorm marketing ideas',
 ];
 
-export default function NewChatArea() {
+interface NewChatAreaProps {
+  isFullWidth?: boolean;
+}
+
+export default function NewChatArea({ isFullWidth = false }: NewChatAreaProps) {
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-[#0B0D14] h-full min-h-0 relative transition-colors duration-300">
       {/* Top Background Glow Effect */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-600/5 rounded-full blur-[100px] pointer-events-none"></div>
 
       {/* Main Centered Content Area */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 z-10 w-full max-w-4xl mx-auto">
+      <div
+        className={`flex-1 flex flex-col items-center justify-center px-6 z-10 w-full mx-auto transition-all duration-300 ${isFullWidth ? 'max-w-none px-12 lg:px-24' : 'max-w-4xl'}`}
+      >
         {/* Welcome Greeting */}
         <div className="flex flex-col items-center mb-8 text-center">
           <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.4)] mb-6">

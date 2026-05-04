@@ -15,7 +15,11 @@ import {
   MoreHorizontal,
 } from 'lucide-react';
 
-export default function ChatArea() {
+interface ChatAreaProps {
+  isFullWidth?: boolean;
+}
+
+export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-[#0B0D14] h-full min-h-0 relative transition-colors duration-300">
       {/* Top Background Glow Effect */}
@@ -35,7 +39,9 @@ export default function ChatArea() {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 z-10 flex flex-col gap-8 max-w-5xl mx-auto w-full [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
+      <div
+        className={`flex-1 overflow-y-auto px-6 py-6 z-10 flex flex-col gap-8 mx-auto w-full transition-all duration-300 ${isFullWidth ? 'max-w-none px-12 lg:px-24' : 'max-w-5xl'} [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/20`}
+      >
         {/* User Message */}
         <div className="flex justify-end gap-4 w-full">
           <div className="flex flex-col items-end gap-2 max-w-[80%]">
@@ -158,7 +164,9 @@ export default function ChatArea() {
       </div>
 
       {/* Input Area */}
-      <div className="p-6 max-w-5xl mx-auto w-full z-10 pb-8">
+      <div
+        className={`p-6 mx-auto w-full z-10 pb-8 transition-all duration-300 ${isFullWidth ? 'max-w-none px-12 lg:px-24' : 'max-w-5xl'}`}
+      >
         <div className="bg-slate-50 dark:bg-[#131722] border border-slate-200 dark:border-white/10 rounded-2xl p-2 relative shadow-lg transition-colors">
           <textarea
             placeholder="How can I support you?"

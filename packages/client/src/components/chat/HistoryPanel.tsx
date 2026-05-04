@@ -65,12 +65,22 @@ const historyTimeline = [
   },
 ];
 
-export default function HistoryPanel() {
+interface HistoryPanelProps {
+  isCollapsed?: boolean;
+  onToggleLayout?: () => void;
+}
+
+export default function HistoryPanel({
+  isCollapsed = false,
+  onToggleLayout,
+}: HistoryPanelProps) {
   const [isShareOpen, setIsShareOpen] = useState(false);
 
   return (
     <>
-      <div className="w-[340px] shrink-0 p-3 flex flex-col h-screen gap-3 transition-colors duration-300">
+      <div
+        className={`shrink-0 p-3 flex flex-col h-screen gap-3 transition-all duration-300 ${isCollapsed ? 'w-fit absolute top-0 right-0 z-10' : 'w-[340px] relative'}`}
+      >
         {/* Top Right Actions */}
         <div className="flex items-center justify-end gap-2">
           {/* WaveGPT+ Button with gradient border */}
@@ -96,7 +106,10 @@ export default function HistoryPanel() {
           {/* Layout Button with gradient border */}
           <div className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-300 to-slate-400 dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
             <div className="w-8 h-8 bg-gradient-to-tr from-slate-50 to-slate-200 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
-              <button className="p-2 text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+              <button
+                onClick={onToggleLayout}
+                className="p-2 text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors"
+              >
                 <Layout className="w-4 h-4" />
               </button>
             </div>
@@ -104,61 +117,63 @@ export default function HistoryPanel() {
         </div>
 
         {/* History Panel */}
-        <div className="p-1 rounded-lg border border-slate-200 dark:border-white/10 flex-1 flex flex-col min-h-0 bg-white/50 dark:bg-transparent">
-          <div className="flex-1 w-full bg-slate-50 dark:bg-[#0E121A] flex flex-col rounded-md border border-slate-200 dark:border-white/10 overflow-hidden min-h-0 transition-colors">
-            <div className="p-4 flex items-center justify-between border-b border-slate-200 dark:border-white/5 ">
-              <h2 className="text-slate-900 dark:text-white font-medium">
-                History
-              </h2>
-              <button className="text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-400 transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+        {!isCollapsed && (
+          <div className="p-1 rounded-lg border border-slate-200 dark:border-white/10 flex-1 flex flex-col min-h-0 bg-white/50 dark:bg-transparent">
+            <div className="flex-1 w-full bg-slate-50 dark:bg-[#0E121A] flex flex-col rounded-md border border-slate-200 dark:border-white/10 overflow-hidden min-h-0 transition-colors">
+              <div className="p-4 flex items-center justify-between border-b border-slate-200 dark:border-white/5 ">
+                <h2 className="text-slate-900 dark:text-white font-medium">
+                  History
+                </h2>
+                <button className="text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-400 transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-            <div className="flex-1 overflow-y-auto p-6 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
-              <div className="relative border-l border-slate-300 dark:border-white/10 ml-4 space-y-8 pb-8  ">
-                {historyTimeline.map((item, index) => (
-                  <div key={item.id} className="relative pl-6">
-                    {/* Timeline Dot */}
-                    <div className="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-slate-50 dark:bg-[#0E121A] flex items-center justify-center transition-colors">
-                      {item.type === 'ai' ? (
-                        <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center">
-                          <Sparkles className="w-3 h-3 text-white" />
-                        </div>
-                      ) : (
-                        <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
-                          <img
-                            src="https://i.pravatar.cc/100?img=11"
-                            alt="User"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                          {item.type === 'ai' ? 'DataWave' : 'You'}
-                        </span>
-                        <span className="text-xs text-slate-500">
-                          • {item.time}
-                        </span>
+              <div className="flex-1 overflow-y-auto p-6 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
+                <div className="relative border-l border-slate-300 dark:border-white/10 ml-4 space-y-8 pb-8  ">
+                  {historyTimeline.map((item, index) => (
+                    <div key={item.id} className="relative pl-6">
+                      {/* Timeline Dot */}
+                      <div className="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-slate-50 dark:bg-[#0E121A] flex items-center justify-center transition-colors">
+                        {item.type === 'ai' ? (
+                          <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center">
+                            <Sparkles className="w-3 h-3 text-white" />
+                          </div>
+                        ) : (
+                          <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                            <img
+                              src="https://i.pravatar.cc/100?img=11"
+                              alt="User"
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
                       </div>
-                      <p className="text-sm text-slate-900 dark:text-white leading-relaxed mb-1">
-                        {item.title}
-                      </p>
-                      <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
-                        {item.action}
-                      </p>
+
+                      {/* Content */}
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                            {item.type === 'ai' ? 'DataWave' : 'You'}
+                          </span>
+                          <span className="text-xs text-slate-500">
+                            • {item.time}
+                          </span>
+                        </div>
+                        <p className="text-sm text-slate-900 dark:text-white leading-relaxed mb-1">
+                          {item.title}
+                        </p>
+                        <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
+                          {item.action}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Share Modal */}
