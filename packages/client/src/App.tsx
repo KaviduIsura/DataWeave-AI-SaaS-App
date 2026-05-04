@@ -1,14 +1,15 @@
-import Sidebar from './components/chat/Sidebar';
-import ChatArea from './components/chat/ChatArea';
-import HistoryPanel from './components/chat/HistoryPanel';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import ChatWorkspace from './pages/ChatWorkspace';
 
 function App() {
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[#0A0D14] font-sans selection:bg-blue-500/30">
-      <Sidebar />
-      <ChatArea />
-      <HistoryPanel />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/chat" element={<ChatWorkspace />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -1,4 +1,4 @@
-import { X, Sparkles } from 'lucide-react';
+import { X, Sparkles, ChevronDown, Layout, Share } from 'lucide-react';
 
 const historyTimeline = [
   {
@@ -59,7 +59,7 @@ const historyTimeline = [
 export default function HistoryPanel() {
   return (
     <div className="w-[320px] bg-[#0E121A] border-l border-white/5 h-screen flex flex-col shrink-0">
-      <div className="p-6 flex items-center justify-between border-b border-white/5">
+      <div className="p-6 flex items-center justify-between border-b border-white/5 mt-5">
         <h2 className="text-white font-medium">History</h2>
         <button className="text-slate-400 hover:text-white transition-colors">
           <X className="w-5 h-5" />

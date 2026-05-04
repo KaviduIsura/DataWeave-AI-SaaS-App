@@ -31,7 +31,7 @@ export default function ChatArea() {
           </div>
         </div>
         {/* Top Right Actions */}
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 bg-[#131722] hover:bg-[#1C2130] transition-colors text-white text-sm font-medium">
             NokatGPT+
             <ChevronDown className="w-4 h-4 text-slate-400" />
@@ -42,7 +42,7 @@ export default function ChatArea() {
           <button className="p-2.5 rounded-xl border border-white/10 bg-[#131722] hover:bg-[#1C2130] transition-colors text-slate-400 hover:text-white">
             <Layout className="w-4 h-4" />
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Chat Messages */}
