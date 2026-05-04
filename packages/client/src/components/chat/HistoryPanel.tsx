@@ -124,7 +124,10 @@ export default function HistoryPanel({
                 <h2 className="text-slate-900 dark:text-white font-medium">
                   History
                 </h2>
-                <button className="text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-400 transition-colors">
+                <button
+                  onClick={onToggleLayout}
+                  className="text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-400 transition-colors"
+                >
                   <X className="w-5 h-5" />
                 </button>
               </div>
