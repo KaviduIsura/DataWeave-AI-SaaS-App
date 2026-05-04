@@ -1,7 +1,7 @@
 import {
   LucideImages,
   Compass,
-  LucideVoicemail,
+  Search,
   AudioLines,
   SquarePlay,
   LayoutGrid,
@@ -35,14 +35,28 @@ const chatHistory = {
 interface SidebarProps {
   isDarkMode?: boolean;
   toggleTheme?: () => void;
-  onNewChat?: () => void;
+  activeView?: 'chat' | 'new_chat' | 'browse';
+  onNavigate?: (view: 'chat' | 'new_chat' | 'browse') => void;
 }
 
 export default function Sidebar({
   isDarkMode = true,
   toggleTheme,
-  onNewChat,
+  activeView,
+  onNavigate,
 }: SidebarProps) {
+  const navItems = [
+    {
+      icon: Compass,
+      action: () => onNavigate?.('browse'),
+      isActive: activeView === 'browse',
+    },
+    { icon: LucideImages, action: () => {} },
+    { icon: AudioLines, action: () => {} },
+    { icon: SquarePlay, action: () => {} },
+    { icon: LayoutGrid, action: () => {} },
+  ];
+
   return (
     <div className="p-3 h-screen">
       <div className="flex h-full shrink-0 text-slate-700 dark:text-slate-300 rounded-xl border border-slate-200 dark:border-white/10 p-2">
@@ -55,20 +69,24 @@ export default function Sidebar({
             <div className="w-full h-px bg-slate-200 dark:bg-white/10" />
 
             {/* Nav Icons */}
-            {[Compass, LucideImages, AudioLines, SquarePlay, LayoutGrid].map(
-              (Icon, idx) => (
+            {navItems.map((item, idx) => {
+              const Icon = item.icon;
+              return (
                 <div
                   key={idx}
-                  className="relative p-[1px] rounded-md bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md"
+                  className={`relative p-[1px] rounded-md shadow-md ${item.isActive ? 'bg-blue-500' : 'bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50'}`}
                 >
                   <div className="w-8 h-8 bg-gradient-to-tr from-slate-50 to-slate-200 dark:from-[#0f141c] dark:to-slate-800 flex items-center justify-center rounded-md">
-                    <button className="p-2 text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                    <button
+                      onClick={item.action}
+                      className={`p-2 rounded-lg transition-colors ${item.isActive ? 'text-blue-500 dark:text-blue-400 bg-slate-200 dark:bg-white/10' : 'text-slate-600 dark:text-white hover:text-slate-900 dark:hover:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/5'}`}
+                    >
                       <Icon className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
-              )
-            )}
+              );
+            })}
           </div>
 
           <hr className="border-t border-slate-200 dark:border-white/10 mx-5 mb-3 w-full max-w-[24px]" />
@@ -122,7 +140,7 @@ export default function Sidebar({
 
           <div className="px-4 pb-4">
             <button
-              onClick={onNewChat}
+              onClick={() => onNavigate?.('new_chat')}
               className="w-full bg-slate-200 dark:bg-[#1a2130] hover:bg-slate-300 dark:hover:bg-[#1E232E] text-slate-800 dark:text-white flex items-center justify-center gap-2 py-2.5 rounded-lg border border-slate-300 dark:border-white/10 transition-colors"
             >
               <Plus className="w-4 h-4" />

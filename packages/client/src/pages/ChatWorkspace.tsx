@@ -2,14 +2,17 @@ import { useState, useEffect } from 'react';
 import Sidebar from '../components/chat/Sidebar';
 import ChatArea from '../components/chat/ChatArea';
 import NewChatArea from '../components/chat/NewChatArea';
+import BrowseArea from '../components/chat/BrowseArea';
 import HistoryPanel from '../components/chat/HistoryPanel';
+
+export type ViewType = 'chat' | 'new_chat' | 'browse';
 
 export default function ChatWorkspace() {
   const [isDarkMode, setIsDarkMode] = useState(() =>
     document.documentElement.classList.contains('dark')
   );
 
-  const [isNewChat, setIsNewChat] = useState(false);
+  const [activeView, setActiveView] = useState<ViewType>('chat');
 
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
 
@@ -26,9 +29,12 @@ export default function ChatWorkspace() {
       <Sidebar
         isDarkMode={isDarkMode}
         toggleTheme={toggleTheme}
-        onNewChat={() => setIsNewChat(true)}
+        activeView={activeView}
+        onNavigate={setActiveView}
       />
-      {isNewChat ? <NewChatArea /> : <ChatArea />}
+      {activeView === 'browse' && <BrowseArea />}
+      {activeView === 'new_chat' && <NewChatArea />}
+      {activeView === 'chat' && <ChatArea />}
       <HistoryPanel />
     </div>
   );
