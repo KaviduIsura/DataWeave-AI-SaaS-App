@@ -189,22 +189,22 @@ export default function Sidebar() {
           </div>
 
           {/* Upgrade Card */}
-          <div className="p-4 mt-auto">
-            <div className="bg-gradient-to-b from-[#161B26] to-[#0A0D14] border border-white/10 rounded-2xl p-4 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-white" />
+          <div className="p-3 mt-auto">
+            <div className="bg-gradient-to-b from-[#161B26] to-[#0A0D14] border border-white/10 rounded-xl p-3 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-xl transform translate-x-8 -translate-y-8"></div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center">
+                  <Sparkles className="w-3 h-3 text-white" />
                 </div>
-                <span className="font-semibold text-white text-sm">
+                <span className="font-semibold text-white text-xs">
                   Upgrade Your Plan
                 </span>
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                Unlock premium features, faster responses, and enhanced
-                capabilities of AI
+              <p className="text-[10px] text-slate-400 leading-snug mb-3">
+                Unlock premium features, faster responses, and enhanced AI
+                capabilities.
               </p>
-              <button className="w-full py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg text-sm font-medium transition-all shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+              <button className="w-full py-1.5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg text-xs font-medium transition-all shadow-[0_0_10px_rgba(37,99,235,0.3)]">
                 Upgrade Premium
               </button>
             </div>
