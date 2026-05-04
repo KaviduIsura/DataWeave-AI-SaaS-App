@@ -149,8 +149,8 @@ export default function Sidebar({
               {/* Other Bottom Icons */}
               {[
                 { icon: HelpCircle, action: () => navigate('/help') },
-                { icon: Settings, action: () => {} },
-                { icon: User, action: () => {} },
+                { icon: Settings, action: () => navigate('/settings') },
+                { icon: User, action: () => navigate('/profile') },
               ].map((item, idx) => {
                 const Icon = item.icon;
                 return (
