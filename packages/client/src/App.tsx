@@ -1,21 +1,13 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-// import { Button } from './components/ui/button';
-import Sidebar from './components/client/Sidebar';
+import Sidebar from './components/chat/Sidebar';
+import ChatArea from './components/chat/ChatArea';
+import HistoryPanel from './components/chat/HistoryPanel';
 
 function App() {
-  const [message, setMessage] = useState('Hello, World!');
-
-  useEffect(() => {
-    fetch('/api/hello')
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message));
-    // .catch(error => console.error('Error fetching message:', error));
-  }, []);
-
   return (
-    <div>
+    <div className="flex h-screen w-full overflow-hidden bg-[#0A0D14] font-sans selection:bg-blue-500/30">
       <Sidebar />
+      <ChatArea />
+      <HistoryPanel />
     </div>
   );
 }
