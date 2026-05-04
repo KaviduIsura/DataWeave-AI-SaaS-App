@@ -142,9 +142,9 @@ export default function Sidebar() {
                 {chatHistory.today.map((chat) => (
                   <button
                     key={chat.id}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-left bg-white/5"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm border border-white/10 text-white hover:bg-white/5 hover:text-white transition-colors text-left bg-white/5"
                   >
-                    <MessageSquare className="w-4 h-4 shrink-0 text-slate-400 " />
+                    <MessageSquare className="w-4 h-4 shrink-0 text-white " />
                     <span className="truncate flex-1">{chat.title}</span>
                   </button>
                 ))}
@@ -160,7 +160,7 @@ export default function Sidebar() {
                 {chatHistory.yesterday.map((chat) => (
                   <button
                     key={chat.id}
-                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-200 hover:bg-white/5 hover:text-white transition-colors text-left"
                   >
                     <MessageSquare className="w-4 h-4 shrink-0" />
                     <span className="truncate flex-1">{chat.title}</span>
@@ -178,7 +178,7 @@ export default function Sidebar() {
                 {chatHistory.previous.map((chat) => (
                   <button
                     key={chat.id}
-                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-200 hover:bg-white/5 hover:text-white transition-colors text-left"
                   >
                     <MessageSquare className="w-4 h-4 shrink-0" />
                     <span className="truncate flex-1">{chat.title}</span>
