@@ -4,8 +4,15 @@ import ChatArea from '../components/chat/ChatArea';
 import NewChatArea from '../components/chat/NewChatArea';
 import BrowseArea from '../components/chat/BrowseArea';
 import HistoryPanel from '../components/chat/HistoryPanel';
+import ImageGenerationArea from '../components/chat/ImageGenerationArea';
+import VoiceGenerationArea from '../components/chat/VoiceGenerationArea';
 
-export type ViewType = 'chat' | 'new_chat' | 'browse';
+export type ViewType =
+  | 'chat'
+  | 'new_chat'
+  | 'browse'
+  | 'image_generation'
+  | 'voice_generation';
 
 export default function ChatWorkspace() {
   const [isDarkMode, setIsDarkMode] = useState(() =>
@@ -35,6 +42,8 @@ export default function ChatWorkspace() {
       {activeView === 'browse' && <BrowseArea />}
       {activeView === 'new_chat' && <NewChatArea />}
       {activeView === 'chat' && <ChatArea />}
+      {activeView === 'image_generation' && <ImageGenerationArea />}
+      {activeView === 'voice_generation' && <VoiceGenerationArea />}
       <HistoryPanel />
     </div>
   );

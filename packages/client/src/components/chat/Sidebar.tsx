@@ -35,8 +35,20 @@ const chatHistory = {
 interface SidebarProps {
   isDarkMode?: boolean;
   toggleTheme?: () => void;
-  activeView?: 'chat' | 'new_chat' | 'browse';
-  onNavigate?: (view: 'chat' | 'new_chat' | 'browse') => void;
+  activeView?:
+    | 'chat'
+    | 'new_chat'
+    | 'browse'
+    | 'image_generation'
+    | 'voice_generation';
+  onNavigate?: (
+    view:
+      | 'chat'
+      | 'new_chat'
+      | 'browse'
+      | 'image_generation'
+      | 'voice_generation'
+  ) => void;
 }
 
 export default function Sidebar({
@@ -51,8 +63,16 @@ export default function Sidebar({
       action: () => onNavigate?.('browse'),
       isActive: activeView === 'browse',
     },
-    { icon: LucideImages, action: () => {} },
-    { icon: AudioLines, action: () => {} },
+    {
+      icon: LucideImages,
+      action: () => onNavigate?.('image_generation'),
+      isActive: activeView === 'image_generation',
+    },
+    {
+      icon: AudioLines,
+      action: () => onNavigate?.('voice_generation'),
+      isActive: activeView === 'voice_generation',
+    },
     { icon: SquarePlay, action: () => {} },
     { icon: LayoutGrid, action: () => {} },
   ];
@@ -138,10 +158,10 @@ export default function Sidebar({
           </div>
           <hr className="border-t border-slate-200 dark:border-white/10 mx-5 mb-3" />
 
-          <div className="px-4 pb-4">
+          <div className="px-4 pb-4 flex flex-col gap-2">
             <button
               onClick={() => onNavigate?.('new_chat')}
-              className="w-full bg-slate-200 dark:bg-[#1a2130] hover:bg-slate-300 dark:hover:bg-[#1E232E] text-slate-800 dark:text-white flex items-center justify-center gap-2 py-2.5 rounded-lg border border-slate-300 dark:border-white/10 transition-colors"
+              className={`w-full hover:bg-slate-300 dark:hover:bg-[#1E232E] text-slate-800 dark:text-white flex items-center justify-center gap-2 py-2.5 rounded-lg border transition-colors ${activeView === 'new_chat' ? 'bg-slate-300 dark:bg-[#1E232E] border-slate-400 dark:border-white/20' : 'bg-slate-200 dark:bg-[#1a2130] border-slate-300 dark:border-white/10'}`}
             >
               <Plus className="w-4 h-4" />
               <span className="font-medium text-sm">Add new chat</span>
