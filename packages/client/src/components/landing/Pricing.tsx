@@ -1,117 +1,186 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
-
-const plans = [
-  {
-    name: 'Starter',
-    price: '$0',
-    desc: 'Perfect for individuals getting started with AI.',
-    features: [
-      '100 AI Generation credits/mo',
-      'Basic Time Tracking',
-      'Standard support',
-      '7-day chat history',
-    ],
-    highlighted: false,
-  },
-  {
-    name: 'Pro',
-    price: '$29',
-    period: '/mo',
-    desc: 'Ideal for professionals needing advanced tools.',
-    features: [
-      'Unlimited AI Generation',
-      'Advanced Dashboard Analytics',
-      'Priority 24/7 support',
-      'Unlimited history',
-      'Custom AI personas',
-    ],
-    highlighted: true,
-  },
-  {
-    name: 'Team',
-    price: '$99',
-    period: '/mo',
-    desc: 'For teams collaborating on complex projects.',
-    features: [
-      'Everything in Pro',
-      'Up to 10 team members',
-      'Shared workspaces',
-      'Admin controls',
-      'Custom integrations',
-    ],
-    highlighted: false,
-  },
-];
+import { CheckCircle2 } from 'lucide-react';
 
 export default function Pricing() {
+  const [isAnnual, setIsAnnual] = useState(false);
+
   return (
-    <section className="py-24 relative z-10">
+    <section className="py-24 bg-white relative">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-            Simple, transparent pricing
-          </h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            Choose the plan that fits your workflow. No hidden fees.
-          </p>
+        {/* Stats */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 mb-32 border-b border-slate-100 pb-16">
+          <div className="text-center">
+            <div className="text-3xl font-medium text-slate-900 mb-1">2M+</div>
+            <div className="text-sm text-slate-500">workflows executed</div>
+          </div>
+          <div className="w-px h-12 bg-slate-200 hidden md:block"></div>
+          <div className="text-center">
+            <div className="text-3xl font-medium text-slate-900 mb-1">
+              SOC 3
+            </div>
+            <div className="text-sm text-slate-500">Security Standards</div>
+          </div>
+          <div className="w-px h-12 bg-slate-200 hidden md:block"></div>
+          <div className="text-center">
+            <div className="text-3xl font-medium text-slate-900 mb-1">98%</div>
+            <div className="text-sm text-slate-500">uptime SLA</div>
+          </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {plans.map((plan, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className={`relative rounded-3xl p-8 backdrop-blur-sm ${
-                plan.highlighted
-                  ? 'bg-gradient-to-b from-blue-900/40 to-[#0E121A] border-2 border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.2)]'
-                  : 'bg-[#0E121A] border border-white/10'
-              }`}
+        {/* Header */}
+        <div className="text-center mb-12 max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-medium text-slate-900 mb-4 tracking-tight">
+            Start free. Scale when you're ready.
+          </h2>
+          <p className="text-slate-500 text-lg mb-8">
+            Monthly and annual billing available. Cancel anytime.
+          </p>
+
+          {/* Toggle */}
+          <div className="inline-flex items-center p-1 bg-white border border-slate-200 rounded-full shadow-sm">
+            <button
+              onClick={() => setIsAnnual(false)}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${!isAnnual ? 'text-slate-900 bg-slate-50 shadow-sm border border-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
             >
-              {plan.highlighted && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                  Most Popular
+              Monthly
+            </button>
+            <button
+              onClick={() => setIsAnnual(true)}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${isAnnual ? 'text-slate-900 bg-slate-50 shadow-sm border border-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+              Yearly{' '}
+              <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                30% Off
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-3 gap-8 items-center max-w-5xl mx-auto mt-16">
+          {/* Free Plan */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-3xl p-8 border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] h-full flex flex-col"
+          >
+            <div className="mb-8">
+              <span className="text-slate-900 font-medium text-lg">Free</span>
+              <div className="mt-4 flex items-baseline gap-1">
+                <span className="text-5xl font-medium text-slate-900">$0</span>
+                <span className="text-slate-500">/ month</span>
+              </div>
+            </div>
+
+            <ul className="space-y-4 mb-10 flex-1">
+              {[
+                '10 automations',
+                'Community support',
+                'Basic integrations',
+                'Standard dashboard',
+              ].map((feature, i) => (
+                <li key={i} className="flex items-center gap-3 text-slate-600">
+                  <CheckCircle2 className="w-5 h-5 text-slate-300" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            <button className="w-full py-3.5 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500 text-white font-medium transition-all">
+              Choose plan
+            </button>
+          </motion.div>
+
+          {/* Pro Plan */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="relative bg-white rounded-3xl p-1 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.1)] h-full flex flex-col transform md:-translate-y-4"
+          >
+            {/* Glowing Gradient Border */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-300 via-purple-300 to-yellow-200 rounded-3xl -z-10"></div>
+
+            <div className="bg-white/95 backdrop-blur-xl rounded-[1.4rem] p-8 h-full flex flex-col relative overflow-hidden">
+              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-400 to-yellow-400"></div>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-400 to-yellow-400 text-white text-xs font-semibold px-4 py-1 rounded-b-xl">
+                Popular
+              </div>
+
+              <div className="mb-8 mt-4">
+                <span className="text-slate-900 font-medium text-lg">Pro</span>
+                <div className="mt-4 flex items-baseline gap-1">
+                  <span className="text-5xl font-medium text-slate-900">
+                    {isAnnual ? '$69' : '$99'}
+                  </span>
+                  <span className="text-slate-500">/ month</span>
                 </div>
-              )}
-
-              <h3 className="text-xl font-semibold text-white mb-2">
-                {plan.name}
-              </h3>
-              <p className="text-slate-400 text-sm mb-6">{plan.desc}</p>
-              <div className="mb-8">
-                <span className="text-4xl font-bold text-white">
-                  {plan.price}
-                </span>
-                {plan.period && (
-                  <span className="text-slate-500">{plan.period}</span>
-                )}
               </div>
 
-              <button
-                className={`w-full py-3 rounded-xl font-medium transition-all mb-8 ${
-                  plan.highlighted
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] hover:shadow-[0_0_25px_rgba(79,70,229,0.6)]'
-                    : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
-                }`}
-              >
-                {plan.price === '$0' ? 'Get Started' : 'Upgrade Plan'}
-              </button>
-
-              <div className="space-y-4">
-                {plan.features.map((feature, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <Check
-                      className={`w-5 h-5 shrink-0 ${plan.highlighted ? 'text-blue-400' : 'text-slate-500'}`}
-                    />
-                    <span className="text-slate-300 text-sm">{feature}</span>
-                  </div>
+              <ul className="space-y-4 mb-10 flex-1">
+                {[
+                  'Unlimited automations',
+                  'Email support',
+                  'Advanced integrations',
+                  'Team collaboration',
+                  'Priority support',
+                ].map((feature, i) => (
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-slate-600"
+                  >
+                    <CheckCircle2 className="w-5 h-5 text-slate-800" />
+                    {feature}
+                  </li>
                 ))}
+              </ul>
+
+              <button className="w-full py-3.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium transition-all shadow-[0_5px_15px_rgba(99,102,241,0.3)]">
+                Choose plan
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Custom Plan */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-3xl p-8 border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] h-full flex flex-col"
+          >
+            <div className="mb-8">
+              <span className="text-slate-900 font-medium text-lg">Free</span>
+              <div className="mt-4 flex items-baseline gap-1">
+                <span className="text-5xl font-medium text-slate-900">
+                  Custom
+                </span>
+                <span className="text-slate-500 text-sm">/ contact sales</span>
               </div>
-            </motion.div>
-          ))}
+            </div>
+
+            <ul className="space-y-4 mb-10 flex-1">
+              {[
+                'Custom workflows',
+                'Dedicated success manager',
+                'SSO & advanced security',
+                'Compliance add-ons',
+                '24/7 support',
+              ].map((feature, i) => (
+                <li key={i} className="flex items-center gap-3 text-slate-600">
+                  <CheckCircle2 className="w-5 h-5 text-slate-300" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            <button className="w-full py-3.5 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500 text-white font-medium transition-all">
+              Choose plan
+            </button>
+          </motion.div>
         </div>
       </div>
     </section>
