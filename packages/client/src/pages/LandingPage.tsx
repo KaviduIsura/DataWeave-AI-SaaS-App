@@ -4,6 +4,7 @@ import FeaturesSection from '../components/landing/FeaturesSection';
 import DashboardPreview from '../components/landing/DashboardPreview';
 import HowItWorks from '../components/landing/HowItWorks';
 import Pricing from '../components/landing/Pricing';
+import ResourcesSection from '../components/landing/ResourcesSection';
 import Footer from '../components/landing/Footer';
 
 export default function LandingPage() {
@@ -27,6 +28,7 @@ export default function LandingPage() {
       <DashboardPreview />
       <FeaturesSection />
       <HowItWorks />
+      <ResourcesSection />
       <Pricing />
       <Footer />
     </div>

@@ -6,7 +6,7 @@ export default function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false);
 
   return (
-    <section className="py-24 bg-white relative">
+    <section id="pricing" className="py-24 bg-white relative">
       <div className="max-w-7xl mx-auto px-6">
         {/* Stats */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 mb-32 border-b border-slate-100 pb-16">

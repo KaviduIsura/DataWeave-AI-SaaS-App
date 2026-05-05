@@ -14,13 +14,19 @@ import {
 
 export default function DashboardPreview() {
   return (
-    <section className="relative pb-24 px-6 z-20 flex justify-center mt-[-40px]">
+    <section className="relative pb-32 px-6 z-20 flex justify-center mt-[-60px]">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="w-full max-w-6xl rounded-[2rem] p-2 bg-gradient-to-b from-white/60 to-white/30 backdrop-blur-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-white"
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        animate={{ y: [0, -10, 0] }}
+        style={{
+          animationDuration: '6s',
+          animationIterationCount: 'infinite',
+          animationTimingFunction: 'ease-in-out',
+        }}
+        className="w-full max-w-6xl rounded-[2rem] p-2 bg-gradient-to-b from-white/60 to-white/10 backdrop-blur-3xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] border border-white/80"
       >
         <div className="rounded-[1.5rem] overflow-hidden bg-white/90 border border-slate-100 shadow-inner flex items-center justify-center relative min-h-[600px] w-full">
           {/* Subtle Top Mesh */}
