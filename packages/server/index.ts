@@ -3,11 +3,17 @@ import type { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
+// Import config
+import { connectDB } from './src/config/db';
+
 // Import Routes
 import chatRoutes from './src/routes/chat.routes';
 import userRoutes from './src/routes/user.routes';
 
 dotenv.config();
+
+// Connect to MongoDB
+connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
