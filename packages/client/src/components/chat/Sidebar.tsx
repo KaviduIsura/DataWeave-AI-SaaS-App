@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   LucideImages,
   Compass,
@@ -17,23 +17,12 @@ import {
   X,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-const chatHistory = {
-  today: [{ id: 1, title: 'Make 10 others sentences...' }],
-  yesterday: [
-    { id: 2, title: 'Give the attrition rate from...' },
-    { id: 3, title: 'Generate trucking americ...' },
-    { id: 4, title: 'Trade over-the-counter (...)' },
-    { id: 5, title: 'make another sentence l...' },
-    { id: 6, title: 'make an image about dino...' },
-    { id: 7, title: 'combine these two parag...' },
-  ],
-  previous: [
-    { id: 8, title: 'shorten this paragraph "W...' },
-    { id: 9, title: "you're a social media spec..." },
-    { id: 10, title: 'Make a title for slide 5 "you...' },
-  ],
-};
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import {
+  fetchChats,
+  loadChatMessages,
+  clearMessages,
+} from '../../store/slices/chatSlice';
 
 interface SidebarProps {
   isDarkMode?: boolean;
@@ -64,6 +53,22 @@ export default function Sidebar({
 }: SidebarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { chats, activeChatId } = useAppSelector((state) => state.chat);
+
+  useEffect(() => {
+    dispatch(fetchChats());
+  }, [dispatch]);
+
+  const handleNewChat = () => {
+    dispatch(clearMessages());
+    onNavigate?.('new_chat');
+  };
+
+  const handleLoadChat = (chatId: string) => {
+    dispatch(loadChatMessages(chatId));
+    onNavigate?.('chat');
+  };
 
   const navItems = [
     {
@@ -93,6 +98,19 @@ export default function Sidebar({
     },
     { icon: LayoutGrid, action: () => {} },
   ];
+
+  // Group chats by date
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const chatsToday = chats.filter((c) => new Date(c.updatedAt) >= today);
+  const chatsYesterday = chats.filter((c) => {
+    const date = new Date(c.updatedAt);
+    return date >= yesterday && date < today;
+  });
+  const chatsPrevious = chats.filter((c) => new Date(c.updatedAt) < yesterday);
 
   return (
     <>
@@ -188,7 +206,7 @@ export default function Sidebar({
 
             <div className="px-4 pb-4 flex flex-col gap-2">
               <button
-                onClick={() => onNavigate?.('new_chat')}
+                onClick={handleNewChat}
                 className={`w-full hover:bg-slate-100 dark:hover:bg-[#1E232E] text-slate-800 dark:text-white flex items-center justify-center gap-2 py-2.5 rounded-lg border transition-colors ${activeView === 'new_chat' ? 'bg-slate-100 dark:bg-[#1E232E] border-slate-300 dark:border-white/20' : 'bg-slate-50 dark:bg-[#1a2130] border-slate-200 dark:border-white/10 shadow-sm'}`}
               >
                 <Plus className="w-4 h-4" />
@@ -198,58 +216,79 @@ export default function Sidebar({
 
             <div className="flex-1 overflow-y-auto px-3 pb-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
               {/* Today */}
-              <div className="mb-6">
-                <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
-                  Today
-                </h3>
-                <div className="space-y-0.5">
-                  {chatHistory.today.map((chat) => (
-                    <button
-                      key={chat.id}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white hover:bg-slate-200 dark:hover:bg-white/5 transition-colors text-left bg-white dark:bg-white/5"
-                    >
-                      <MessageSquare className="w-4 h-4 shrink-0 text-slate-500 dark:text-white" />
-                      <span className="truncate flex-1">{chat.title}</span>
-                    </button>
-                  ))}
+              {chatsToday.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
+                    Today
+                  </h3>
+                  <div className="space-y-0.5">
+                    {chatsToday.map((chat) => (
+                      <button
+                        key={chat._id}
+                        onClick={() => handleLoadChat(chat._id)}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm border transition-colors text-left ${
+                          activeChatId === chat._id
+                            ? 'border-slate-200 dark:border-white/10 text-slate-900 dark:text-white bg-slate-100 dark:bg-white/10'
+                            : 'border-transparent text-slate-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        <MessageSquare className="w-4 h-4 shrink-0 text-slate-500 dark:text-gray-400" />
+                        <span className="truncate flex-1">{chat.title}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Yesterday */}
-              <div className="mb-6">
-                <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
-                  Yesterday
-                </h3>
-                <div className="space-y-0.5">
-                  {chatHistory.yesterday.map((chat) => (
-                    <button
-                      key={chat.id}
-                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-gray-200 hover:bg-slate-200 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors text-left"
-                    >
-                      <MessageSquare className="w-4 h-4 shrink-0" />
-                      <span className="truncate flex-1">{chat.title}</span>
-                    </button>
-                  ))}
+              {chatsYesterday.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
+                    Yesterday
+                  </h3>
+                  <div className="space-y-0.5">
+                    {chatsYesterday.map((chat) => (
+                      <button
+                        key={chat._id}
+                        onClick={() => handleLoadChat(chat._id)}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm border transition-colors text-left ${
+                          activeChatId === chat._id
+                            ? 'border-slate-200 dark:border-white/10 text-slate-900 dark:text-white bg-slate-100 dark:bg-white/10'
+                            : 'border-transparent text-slate-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        <MessageSquare className="w-4 h-4 shrink-0" />
+                        <span className="truncate flex-1">{chat.title}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Previous */}
-              <div>
-                <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
-                  Previous
-                </h3>
-                <div className="space-y-0.5">
-                  {chatHistory.previous.map((chat) => (
-                    <button
-                      key={chat.id}
-                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-gray-200 hover:bg-slate-200 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors text-left"
-                    >
-                      <MessageSquare className="w-4 h-4 shrink-0" />
-                      <span className="truncate flex-1">{chat.title}</span>
-                    </button>
-                  ))}
+              {chatsPrevious.length > 0 && (
+                <div>
+                  <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">
+                    Previous
+                  </h3>
+                  <div className="space-y-0.5">
+                    {chatsPrevious.map((chat) => (
+                      <button
+                        key={chat._id}
+                        onClick={() => handleLoadChat(chat._id)}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm border transition-colors text-left ${
+                          activeChatId === chat._id
+                            ? 'border-slate-200 dark:border-white/10 text-slate-900 dark:text-white bg-slate-100 dark:bg-white/10'
+                            : 'border-transparent text-slate-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        <MessageSquare className="w-4 h-4 shrink-0" />
+                        <span className="truncate flex-1">{chat.title}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Upgrade Card */}

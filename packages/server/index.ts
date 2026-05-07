@@ -9,6 +9,7 @@ import { connectDB } from './src/config/db';
 // Import Routes
 import chatRoutes from './src/routes/chat.routes';
 import userRoutes from './src/routes/user.routes';
+import historyRoutes from './src/routes/history.routes';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.get('/api/hello', (req: Request, res: Response) => {
 // Mount Routes
 app.use('/api/chat', chatRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/history', historyRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

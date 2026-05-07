@@ -12,6 +12,8 @@ import {
   addMessage,
   setThinking,
   updateMessage,
+  setActiveChatId,
+  fetchChats,
 } from '../../store/slices/chatSlice';
 import { setActiveView } from '../../store/slices/uiSlice';
 
@@ -30,6 +32,8 @@ export default function NewChatArea({ isFullWidth = false }: NewChatAreaProps) {
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
   const { isThinking, selectedModel } = useAppSelector((state) => state.chat);
+  const { user } = useAppSelector((state) => state.auth);
+  const token = user?.token;
 
   const handleSubmit = async () => {
     if (!input.trim() || isThinking) return;
@@ -71,6 +75,7 @@ export default function NewChatArea({ isFullWidth = false }: NewChatAreaProps) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
           messages: apiMessages,
@@ -99,12 +104,14 @@ export default function NewChatArea({ isFullWidth = false }: NewChatAreaProps) {
 
             try {
               const parsed = JSON.parse(data);
-              if (parsed.content) {
-                assistantMessageContent += parsed.content;
+              if (parsed.type === 'chatId' && parsed.chatId) {
+                dispatch(setActiveChatId(parsed.chatId));
+                dispatch(fetchChats()); // Refresh sidebar
+              } else if (parsed.content) {
                 dispatch(
                   updateMessage({
                     id: assistantId,
-                    content: assistantMessageContent,
+                    content: parsed.content,
                   })
                 );
               }

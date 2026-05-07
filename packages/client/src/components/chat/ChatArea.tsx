@@ -4,6 +4,8 @@ import {
   addMessage,
   updateMessage,
   setThinking,
+  setActiveChatId,
+  fetchChats,
 } from '../../store/slices/chatSlice';
 import {
   ChevronDown,
@@ -24,9 +26,11 @@ interface ChatAreaProps {
 }
 
 export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
-  const { messages, selectedModel, isThinking } = useAppSelector(
+  const { messages, selectedModel, isThinking, activeChatId } = useAppSelector(
     (state) => state.chat
   );
+  const { user } = useAppSelector((state) => state.auth);
+  const token = user?.token;
   const dispatch = useAppDispatch();
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -71,6 +75,7 @@ export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
           messages: [...messages, { role: 'user', content: userMessage }].map(
@@ -80,6 +85,7 @@ export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
             })
           ),
           model: selectedModel,
+          chatId: activeChatId,
         }),
       });
 
@@ -100,7 +106,12 @@ export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
           if (line.startsWith('data: ') && line !== 'data: [DONE]') {
             try {
               const data = JSON.parse(line.slice(6));
-              if (data.content) {
+              if (data.type === 'chatId' && data.chatId) {
+                if (activeChatId !== data.chatId) {
+                  dispatch(setActiveChatId(data.chatId));
+                  dispatch(fetchChats()); // Refresh sidebar
+                }
+              } else if (data.content) {
                 dispatch(
                   updateMessage({ id: assistantId, content: data.content })
                 );

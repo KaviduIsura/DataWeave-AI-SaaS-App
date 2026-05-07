@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useAppSelector } from '../../store/hooks';
 import {
   X,
   Sparkles,
@@ -32,62 +33,6 @@ const aiModels = [
   },
 ];
 
-const historyTimeline = [
-  {
-    id: 1,
-    type: 'ai',
-    title:
-      'The Time Tracker Dashboard is a powerful tool designed to help individu...',
-    action: 'Generated',
-    time: '08:34 AM',
-  },
-  {
-    id: 2,
-    type: 'user',
-    title: 'Make short paragraphs under this title "Time Tracker Dashboard"',
-    action: 'Requested',
-    time: '08:34 AM',
-  },
-  {
-    id: 3,
-    type: 'ai',
-    title:
-      'The Time Tracker Dashboard is a powerful tool designed to help individu...',
-    action: 'Generated',
-    time: '07:21 AM',
-  },
-  {
-    id: 4,
-    type: 'user',
-    title: 'make the subhead line from "Time Tracker Dashboard"',
-    action: 'Requested',
-    time: '07:21 AM',
-  },
-  {
-    id: 5,
-    type: 'ai',
-    title:
-      '"Brand Tone & Style: Casual, fun, & witty - Keep it lighthearted and engaging.',
-    action: 'Generated',
-    time: 'Feb 20, 02:12 AM',
-  },
-  {
-    id: 6,
-    type: 'user',
-    title: "Generate brand tone from this guideline that I've attached",
-    action: 'Requested',
-    time: 'Feb 20, 02:12 AM',
-  },
-  {
-    id: 7,
-    type: 'ai',
-    title:
-      'New to crypto? Learn the basics of blockchain, wallets, and trading. Step...',
-    action: 'Generated',
-    time: 'Feb 20, 02:12 AM',
-  },
-];
-
 interface HistoryPanelProps {
   isCollapsed?: boolean;
   onToggleLayout?: () => void;
@@ -100,6 +45,17 @@ export default function HistoryPanel({
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState(aiModels[0]);
+  const { messages } = useAppSelector((state) => state.chat);
+
+  const formatTime = (dateString?: string) => {
+    if (!dateString) return 'Just now';
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    }).format(date);
+  };
 
   return (
     <>
@@ -190,7 +146,7 @@ export default function HistoryPanel({
             <div className="flex-1 w-full bg-white dark:bg-[#0E121A] flex flex-col rounded-md border border-slate-200 dark:border-white/10 overflow-hidden min-h-0 transition-colors">
               <div className="p-4 flex items-center justify-between border-b border-slate-200 dark:border-white/5 ">
                 <h2 className="text-slate-900 dark:text-white font-medium">
-                  History
+                  Chat History
                 </h2>
                 <button
                   onClick={onToggleLayout}
@@ -202,18 +158,21 @@ export default function HistoryPanel({
 
               <div className="flex-1 overflow-y-auto p-6 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
                 <div className="relative border-l border-slate-300 dark:border-white/10 ml-4 space-y-8 pb-8  ">
-                  {historyTimeline.map((item, index) => (
-                    <div key={item.id} className="relative pl-6">
+                  {messages.map((message, index) => (
+                    <div
+                      key={message.id || message._id || index}
+                      className="relative pl-6"
+                    >
                       {/* Timeline Dot */}
                       <div className="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-white dark:bg-[#0E121A] flex items-center justify-center transition-colors">
-                        {item.type === 'ai' ? (
+                        {message.role === 'assistant' ? (
                           <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center">
                             <Sparkles className="w-3 h-3 text-white" />
                           </div>
                         ) : (
                           <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
                             <img
-                              src="https://i.pravatar.cc/100?img=11"
+                              src="https://ui-avatars.com/api/?name=User&background=random"
                               alt="User"
                               className="w-full h-full object-cover"
                             />
@@ -225,21 +184,28 @@ export default function HistoryPanel({
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                            {item.type === 'ai' ? 'DataWave' : 'You'}
+                            {message.role === 'assistant' ? 'DataWave' : 'You'}
                           </span>
                           <span className="text-xs text-slate-500">
-                            • {item.time}
+                            • {formatTime(message.createdAt)}
                           </span>
                         </div>
-                        <p className="text-sm text-slate-900 dark:text-white leading-relaxed mb-1">
-                          {item.title}
+                        <p className="text-sm text-slate-900 dark:text-white leading-relaxed mb-1 line-clamp-2">
+                          {message.content}
                         </p>
                         <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
-                          {item.action}
+                          {message.role === 'assistant'
+                            ? 'Generated'
+                            : 'Requested'}
                         </p>
                       </div>
                     </div>
                   ))}
+                  {messages.length === 0 && (
+                    <div className="pl-6 text-sm text-slate-500 dark:text-slate-400">
+                      No history yet for this chat.
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
