@@ -6,7 +6,7 @@ export const chatCompletion = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { messages, model = 'gpt-3.5-turbo' } = req.body;
+    const { messages, model = 'gpt-3.5-turbo' } = req.body || {};
 
     if (!messages || !Array.isArray(messages)) {
       res.status(400).json({ error: 'Messages array is required' });
@@ -33,7 +33,7 @@ export const chatStream = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { messages, model = 'gpt-3.5-turbo' } = req.body;
+    const { messages, model = 'gpt-3.5-turbo' } = req.body || {};
 
     if (!messages || !Array.isArray(messages)) {
       res.status(400).json({ error: 'Messages array is required' });

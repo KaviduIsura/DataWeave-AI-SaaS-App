@@ -1,4 +1,10 @@
-import { useAppSelector } from '../../store/hooks';
+import { useState, useRef, useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import {
+  addMessage,
+  updateMessage,
+  setThinking,
+} from '../../store/slices/chatSlice';
 import {
   ChevronDown,
   ThumbsUp,
@@ -10,6 +16,7 @@ import {
   Mic,
   Link2,
   MoreHorizontal,
+  Send,
 } from 'lucide-react';
 
 interface ChatAreaProps {
@@ -17,7 +24,113 @@ interface ChatAreaProps {
 }
 
 export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
-  const { messages, selectedModel } = useAppSelector((state) => state.chat);
+  const { messages, selectedModel, isThinking } = useAppSelector(
+    (state) => state.chat
+  );
+  const dispatch = useAppDispatch();
+  const [input, setInput] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSubmit = async () => {
+    if (!input.trim() || isThinking) return;
+
+    const userMessage = input.trim();
+    setInput('');
+
+    // Add user message
+    dispatch(
+      addMessage({
+        id: Date.now().toString(),
+        role: 'user',
+        content: userMessage,
+      })
+    );
+
+    dispatch(setThinking(true));
+
+    // Prepare assistant message
+    const assistantId = (Date.now() + 1).toString();
+    dispatch(
+      addMessage({
+        id: assistantId,
+        role: 'assistant',
+        content: '',
+      })
+    );
+
+    try {
+      const response = await fetch('http://localhost:3000/api/chat/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [...messages, { role: 'user', content: userMessage }].map(
+            (m) => ({
+              role: m.role,
+              content: m.content,
+            })
+          ),
+          model: selectedModel,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.body) throw new Error('No readable stream available');
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.content) {
+                dispatch(
+                  updateMessage({ id: assistantId, content: data.content })
+                );
+              }
+            } catch (e) {
+              console.error('Error parsing stream chunk', e);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Chat error:', error);
+      dispatch(
+        updateMessage({
+          id: assistantId,
+          content:
+            '\n\n**Error:** Sorry, there was an issue connecting to the server.',
+        })
+      );
+    } finally {
+      dispatch(setThinking(false));
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
 
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-[#0B0D14] h-full min-h-0 relative transition-colors duration-300">
@@ -41,83 +154,105 @@ export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
       <div
         className={`flex-1 overflow-y-auto px-6 py-6 z-10 flex flex-col gap-8 mx-auto w-full transition-all duration-300 ${isFullWidth ? 'max-w-none px-12 lg:px-24' : 'max-w-5xl'} [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/20`}
       >
-        {messages.map((msg, index) => (
-          <div
-            key={msg.id}
-            className={`flex ${msg.role === 'user' ? 'justify-end' : ''} gap-4 w-full ${index === messages.length - 1 ? 'pb-8' : ''}`}
-          >
-            {msg.role === 'user' ? (
-              <>
-                <div className="flex flex-col items-end gap-2 max-w-[80%]">
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 mr-2">
-                    You
-                  </span>
-                  <div className="bg-blue-50 dark:bg-[#1C2130] border border-blue-100 dark:border-white/5 rounded-2xl rounded-tr-sm px-5 py-3 text-slate-900 dark:text-white text-sm leading-relaxed transition-colors">
-                    {msg.content}
-                  </div>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex-shrink-0 overflow-hidden">
-                  <img
-                    src="https://i.pravatar.cc/100?img=11"
-                    alt="User"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(37,99,235,0.5)]">
-                  <Sparkles className="w-4 h-4 text-white" />
-                </div>
-                <div className="flex flex-col items-start gap-2 max-w-[80%]">
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 ml-2">
-                    DataWave
-                  </span>
-                  <div className="bg-slate-50 dark:bg-[#131722] border border-slate-200 dark:border-white/5 rounded-2xl rounded-tl-sm px-6 py-5 text-slate-900 dark:text-white text-sm leading-relaxed w-full shadow-sm dark:shadow-none transition-colors">
-                    {msg.title && (
-                      <h4 className="font-semibold text-slate-900 dark:text-white mb-2 text-base">
-                        {msg.title}
-                      </h4>
-                    )}
-                    <p className="text-slate-700 dark:text-slate-300">
+        {messages.length === 0 ? (
+          <div className="flex-1 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 h-full mt-20">
+            <Sparkles className="w-12 h-12 mb-4 opacity-50 text-blue-500" />
+            <p className="text-lg font-medium">How can I help you today?</p>
+          </div>
+        ) : (
+          messages.map((msg, index) => (
+            <div
+              key={msg.id}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : ''} gap-4 w-full ${index === messages.length - 1 ? 'pb-8' : ''}`}
+            >
+              {msg.role === 'user' ? (
+                <>
+                  <div className="flex flex-col items-end gap-2 max-w-[80%]">
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-300 mr-2">
+                      You
+                    </span>
+                    <div className="bg-blue-50 dark:bg-[#1C2130] border border-blue-100 dark:border-white/5 rounded-2xl rounded-tr-sm px-5 py-3 text-slate-900 dark:text-white text-sm leading-relaxed transition-colors whitespace-pre-wrap">
                       {msg.content}
-                    </p>
+                    </div>
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex-shrink-0 overflow-hidden">
+                    <img
+                      src="https://i.pravatar.cc/100?img=11"
+                      alt="User"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(37,99,235,0.5)]">
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="flex flex-col items-start gap-2 max-w-[80%]">
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-300 ml-2">
+                      DataWave
+                    </span>
+                    <div className="bg-slate-50 dark:bg-[#131722] border border-slate-200 dark:border-white/5 rounded-2xl rounded-tl-sm px-6 py-5 text-slate-900 dark:text-white text-sm leading-relaxed w-full shadow-sm dark:shadow-none transition-colors">
+                      {msg.title && (
+                        <h4 className="font-semibold text-slate-900 dark:text-white mb-2 text-base">
+                          {msg.title}
+                        </h4>
+                      )}
+                      {msg.content ? (
+                        <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+                          {msg.content}
+                        </p>
+                      ) : (
+                        <div className="flex gap-1 items-center h-5">
+                          <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce"></div>
+                          <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce delay-75"></div>
+                          <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce delay-150"></div>
+                        </div>
+                      )}
 
-                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-200 dark:border-white/5">
-                      <div className="flex items-center gap-1">
-                        <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
-                          <ThumbsUp className="w-4 h-4" />
-                        </button>
-                        <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
-                          <ThumbsDown className="w-4 h-4" />
-                        </button>
-                        <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
-                          <Copy className="w-4 h-4" />
-                        </button>
-                        <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
-                          <RefreshCcw className="w-4 h-4" />
-                        </button>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-500 bg-slate-200 dark:bg-black/20 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-white/5">
-                        {selectedModel} <ChevronDown className="w-3 h-3" />
+                      <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-200 dark:border-white/5">
+                        <div className="flex items-center gap-1">
+                          <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                            <ThumbsUp className="w-4 h-4" />
+                          </button>
+                          <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                            <ThumbsDown className="w-4 h-4" />
+                          </button>
+                          <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                            <Copy className="w-4 h-4" />
+                          </button>
+                          <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                            <RefreshCcw className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-500 bg-slate-200 dark:bg-black/20 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-white/5">
+                          {selectedModel} <ChevronDown className="w-3 h-3" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </>
-            )}
-          </div>
-        ))}
+                </>
+              )}
+            </div>
+          ))
+        )}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
       <div
         className={`p-6 mx-auto w-full z-10 pb-8 transition-all duration-300 ${isFullWidth ? 'max-w-none px-12 lg:px-24' : 'max-w-5xl'}`}
       >
-        <div className="bg-slate-50 dark:bg-[#131722] border border-slate-200 dark:border-white/10 rounded-2xl p-2 relative shadow-lg transition-colors">
+        <div className="bg-slate-50 dark:bg-[#131722] border border-slate-200 dark:border-white/10 rounded-2xl p-2 relative shadow-lg transition-colors flex flex-col">
           <textarea
-            placeholder="How can I support you?"
-            className="w-full bg-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 resize-none outline-none px-4 pt-4 pb-12 min-h-[120px] text-sm"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={isThinking}
+            placeholder={
+              isThinking ? 'DataWave is thinking...' : 'How can I support you?'
+            }
+            className="w-full bg-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 resize-none outline-none px-4 pt-4 pb-12 min-h-[120px] text-sm disabled:opacity-50"
           />
           <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
             {/* MoreHorizontal Button with gradient border */}
@@ -130,32 +265,40 @@ export default function ChatArea({ isFullWidth = false }: ChatAreaProps) {
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Paperclip Button with gradient border */}
-              <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                <div className="bg-white dark:bg-[#131722] rounded-lg">
-                  <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
-                    <Paperclip className="w-4 h-4" />
-                  </button>
+              {input.length > 0 ? (
+                /* Send Button */
+                <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-blue-400 via-blue-500 to-blue-600 shadow-md ml-2 transition-all">
+                  <div className="bg-blue-600 rounded-lg">
+                    <button
+                      onClick={handleSubmit}
+                      disabled={isThinking}
+                      className="p-2 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:hover:bg-blue-600 flex items-center justify-center"
+                    >
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="flex items-center gap-2 transition-all">
+                  {/* Paperclip Button */}
+                  <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
+                    <div className="bg-white dark:bg-[#131722] rounded-lg">
+                      <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                        <Paperclip className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
 
-              {/* Mic Button with gradient border */}
-              <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                <div className="bg-white dark:bg-[#131722] rounded-lg">
-                  <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
-                    <Mic className="w-4 h-4" />
-                  </button>
+                  {/* Mic Button */}
+                  <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
+                    <div className="bg-white dark:bg-[#131722] rounded-lg">
+                      <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                        <Mic className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              {/* Link2 Button with gradient border */}
-              <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                <div className="bg-white dark:bg-[#131722] rounded-lg">
-                  <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
-                    <Link2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
