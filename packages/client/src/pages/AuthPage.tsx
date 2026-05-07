@@ -1,15 +1,65 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Mail, Lock, User, ArrowRight } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Sparkles, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import {
+  authStart,
+  authSuccess,
+  authFailure,
+  clearError,
+} from '../store/slices/authSlice';
 
 export default function AuthPage() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { isLoading, error, user } = useAppSelector((state) => state.auth);
+
   const [isLogin, setIsLogin] = useState(location.pathname === '/login');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     setIsLogin(location.pathname === '/login');
-  }, [location.pathname]);
+    dispatch(clearError());
+  }, [location.pathname, dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/chat');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(authStart());
+
+    const endpoint = isLogin ? '/api/users/login' : '/api/users/register';
+    const body = isLogin ? { email, password } : { name, email, password };
+
+    try {
+      const res = await fetch(`http://localhost:3000${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Authentication failed');
+      }
+
+      dispatch(authSuccess(data));
+      navigate('/chat');
+    } catch (err: any) {
+      dispatch(authFailure(err.message));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-500/30 overflow-hidden relative flex items-center justify-center">
@@ -86,13 +136,26 @@ export default function AuthPage() {
           {/* Subtle Top Mesh inside card */}
           <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-indigo-50/50 via-white/50 to-transparent pointer-events-none" />
 
-          <form
-            className="relative z-10 space-y-5"
-            onSubmit={(e) => {
-              e.preventDefault();
-              window.location.href = '/chat';
-            }}
-          >
+          {error && (
+            <div className="mb-6 p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm font-medium flex items-center gap-2 relative z-10">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              {error}
+            </div>
+          )}
+
+          <form className="relative z-10 space-y-5" onSubmit={handleSubmit}>
             <AnimatePresence mode="wait">
               {!isLogin && (
                 <motion.div
@@ -109,6 +172,9 @@ export default function AuthPage() {
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
                       type="text"
+                      required={!isLogin}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       placeholder="John Doe"
                       className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-10 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400"
                     />
@@ -125,6 +191,9 @@ export default function AuthPage() {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-10 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400"
                 />
@@ -149,6 +218,9 @@ export default function AuthPage() {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-10 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400"
                 />
@@ -157,10 +229,17 @@ export default function AuthPage() {
 
             <button
               type="submit"
-              className="w-full mt-2 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium transition-all shadow-[0_5px_15px_rgba(99,102,241,0.3)] hover:shadow-[0_8px_20px_rgba(99,102,241,0.4)] hover:-translate-y-0.5"
+              disabled={isLoading}
+              className="w-full mt-2 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium transition-all shadow-[0_5px_15px_rgba(99,102,241,0.3)] hover:shadow-[0_8px_20px_rgba(99,102,241,0.4)] hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
             >
-              {isLogin ? 'Sign In' : 'Create Account'}
-              <ArrowRight className="w-4 h-4" />
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <>
+                  {isLogin ? 'Sign In' : 'Create Account'}
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 
