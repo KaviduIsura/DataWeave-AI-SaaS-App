@@ -2,7 +2,6 @@ import {
   ArrowLeft,
   Bell,
   Monitor,
-  Lock,
   Globe,
   HardDrive,
   Cpu,

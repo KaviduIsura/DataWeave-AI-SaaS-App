@@ -1,4 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import {
+  toggleTheme,
+  setActiveView,
+  toggleLayoutState,
+} from '../store/slices/uiSlice';
 import Sidebar from '../components/chat/Sidebar';
 import ChatArea from '../components/chat/ChatArea';
 import NewChatArea from '../components/chat/NewChatArea';
@@ -17,18 +23,22 @@ export type ViewType =
   | 'video_generation';
 
 export default function ChatWorkspace() {
-  const [isDarkMode, setIsDarkMode] = useState(() =>
-    document.documentElement.classList.contains('dark')
+  const dispatch = useAppDispatch();
+  const { isDarkMode, activeView, layoutState } = useAppSelector(
+    (state) => state.ui
   );
 
-  const [activeView, setActiveView] = useState<ViewType>('chat');
-  const [layoutState, setLayoutState] = useState(0);
-
   const handleToggleLayout = () => {
-    setLayoutState((prev) => (prev + 1) % 3);
+    dispatch(toggleLayoutState());
   };
 
-  const toggleTheme = () => setIsDarkMode((prev) => !prev);
+  const handleToggleTheme = () => {
+    dispatch(toggleTheme());
+  };
+
+  const handleNavigate = (view: ViewType) => {
+    dispatch(setActiveView(view));
+  };
 
   useEffect(() => {
     if (isDarkMode) {
@@ -43,9 +53,9 @@ export default function ChatWorkspace() {
       {layoutState !== 2 && (
         <Sidebar
           isDarkMode={isDarkMode}
-          toggleTheme={toggleTheme}
+          toggleTheme={handleToggleTheme}
           activeView={activeView}
-          onNavigate={setActiveView}
+          onNavigate={handleNavigate}
         />
       )}
       {activeView === 'browse' && <BrowseArea />}

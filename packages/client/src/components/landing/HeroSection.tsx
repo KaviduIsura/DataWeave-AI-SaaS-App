@@ -3,7 +3,7 @@ import { Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function HeroSection() {
-  const textContainer = {
+  const textContainer: any = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -14,7 +14,7 @@ export default function HeroSection() {
     },
   };
 
-  const item = {
+  const item: any = {
     hidden: { opacity: 0, y: 40, filter: 'blur(10px)' },
     show: {
       opacity: 1,
