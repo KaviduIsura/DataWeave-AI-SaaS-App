@@ -13,6 +13,7 @@ import HistoryPanel from '../components/chat/HistoryPanel';
 import ImageGenerationArea from '../components/chat/ImageGenerationArea';
 import VoiceGenerationArea from '../components/chat/VoiceGenerationArea';
 import VideoGenerationArea from '../components/chat/VideoGenerationArea';
+import { clearMessages } from '../store/slices/chatSlice';
 
 export type ViewType =
   | 'chat'
@@ -37,6 +38,9 @@ export default function ChatWorkspace() {
   };
 
   const handleNavigate = (view: ViewType) => {
+    if (view !== 'chat' && view !== 'new_chat') {
+      dispatch(clearMessages());
+    }
     dispatch(setActiveView(view));
   };
 

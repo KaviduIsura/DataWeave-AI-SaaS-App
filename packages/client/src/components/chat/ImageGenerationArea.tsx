@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   LucideImages,
   Paperclip,
@@ -17,6 +17,9 @@ const sampleTexts = [
 
 export default function ImageGenerationArea() {
   const [input, setInput] = useState('');
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = () => {
     if (!input.trim()) return;
@@ -59,13 +62,39 @@ export default function ImageGenerationArea() {
               className="w-full bg-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 resize-none outline-none px-4 pt-4 pb-12 min-h-[140px] text-base"
             />
             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-              {/* MoreHorizontal Button with gradient border */}
-              <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                <div className="bg-white dark:bg-[#131722] rounded-lg">
-                  <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-[#1C2130]/80 transition-colors">
-                    <MoreHorizontal className="w-4 h-4" />
-                  </button>
+              {/* MoreHorizontal Button with Dropdown */}
+              <div className="relative">
+                <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md z-10">
+                  <div className="bg-white dark:bg-[#131722] rounded-lg">
+                    <button
+                      onClick={() => setIsMoreOpen(!isMoreOpen)}
+                      className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-[#1C2130]/80 transition-colors"
+                    >
+                      <MoreHorizontal className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
+
+                {/* More Options Dropdown */}
+                {isMoreOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-0"
+                      onClick={() => setIsMoreOpen(false)}
+                    />
+                    <div className="absolute bottom-full left-0 mb-2 w-48 bg-white dark:bg-[#131722] border border-slate-200 dark:border-white/10 rounded-xl shadow-xl z-20 py-2 overflow-hidden">
+                      <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+                        Clear Conversation
+                      </button>
+                      <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+                        Export Chat
+                      </button>
+                      <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+                        Settings
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="flex items-center gap-2">
@@ -83,29 +112,36 @@ export default function ImageGenerationArea() {
                   </div>
                 ) : (
                   <div className="flex items-center gap-2 transition-all">
+                    {/* Hidden File Input */}
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      className="hidden"
+                      multiple
+                    />
+
                     {/* Paperclip Button */}
                     <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
                       <div className="bg-white dark:bg-[#131722] rounded-lg">
-                        <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors"
+                        >
                           <Paperclip className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
 
                     {/* Mic Button */}
-                    <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
+                    <div
+                      className={`relative p-[1px] rounded-lg shadow-md transition-all ${isRecording ? 'bg-red-500 animate-pulse' : 'bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50'}`}
+                    >
                       <div className="bg-white dark:bg-[#131722] rounded-lg">
-                        <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                        <button
+                          onClick={() => setIsRecording(!isRecording)}
+                          className={`p-2 rounded-lg transition-colors ${isRecording ? 'text-red-500 bg-red-50 dark:bg-red-500/10' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/5'}`}
+                        >
                           <Mic className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Link2 Button */}
-                    <div className="relative p-[1px] rounded-lg bg-gradient-to-t from-slate-200 via-slate-100 to-white dark:from-white/5 dark:via-white/30 dark:to-white/50 shadow-md">
-                      <div className="bg-white dark:bg-[#131722] rounded-lg">
-                        <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
-                          <Link2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
